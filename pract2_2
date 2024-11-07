@@ -1,0 +1,44 @@
+-- Надання всіх привілеїв ролі admin_role на всю базу даних
+GRANT ALL PRIVILEGES ON your_database.* TO 'admin_role'@'localhost';
+
+-- Створення ролей
+CREATE ROLE admin_role;
+CREATE ROLE developer_role;
+CREATE ROLE analyst_role;
+
+-- Створення користувачів з паролями
+CREATE USER 'admin_user'@'localhost' IDENTIFIED BY 'ddf@e342';
+CREATE USER 'dev_user'@'localhost' IDENTIFIED BY 'dfndf3';
+CREATE USER 'analyst_user'@'localhost' IDENTIFIED BY 'ejrbr5';
+CREATE USER 'guest_user'@'localhost' IDENTIFIED BY 'ewrjh33';
+
+-- Призначення ролей користувачам
+GRANT 'admin_role' TO 'admin_user'@'localhost';
+GRANT 'developer_role' TO 'dev_user'@'localhost';
+GRANT 'analyst_role' TO 'analyst_user'@'localhost';
+
+-- Надання прав на читання таблиці targets користувачу guest_user
+GRANT SELECT ON military.targets TO 'guest_user'@'localhost';
+
+-- Надали CREATE привілеї 
+GRANT CREATE ON military.* TO 'developer_role';
+
+-- Відкликали CREATE привілеї
+REVOKE CREATE ON military.* FROM 'developer_role';
+
+-- Перевірка структури таблиці
+USE military;
+
+-- Створення представлення для analyst_user з доступом тільки до двох стовпців
+CREATE VIEW military_ammo AS
+SELECT mass, caliber FROM ammo;
+
+-- Надання прав на перегляд представлення
+GRANT SELECT ON military.military_ammo TO 'analyst_user'@'localhost';
+
+-- Перегляд списку користувачів 
+SELECT user, host FROM mysql.user;
+
+-- Перегляд привілеїв для користувачів і ролей
+SHOW GRANTS FOR 'analyst_user'@'localhost';
+SHOW GRANTS FOR 'analyst_role';
